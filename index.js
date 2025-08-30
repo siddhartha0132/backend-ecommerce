@@ -59,7 +59,8 @@ app.post("/upload", upload.single("product"), (req, res) => {
     // If we get here, the file was uploaded successfully
     res.json({
       success: 1,
-      image_url: `http://localhost:${port}/images/${req.file.filename}`,
+     image_url: `https://backend-ecommerce-wrcm.onrender.com/images/${req.file.filename}`
+      ,
     });
   } catch (error) {
     // This will catch other unexpected errors during the process
