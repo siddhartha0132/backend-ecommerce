@@ -33,7 +33,10 @@ const storage = multer.diskStorage({
     cb(null, "temp/"); // Temporary folder
   },
   filename: (req, file, cb) => {
-    cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`);
+    cb(
+      null,
+      `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`
+    );
   },
 });
 
@@ -87,7 +90,8 @@ const Product = mongoose.model("Product", {
 app.post("/addproduct", async (req, res) => {
   try {
     const allProducts = await Product.find({});
-    const newId = allProducts.length > 0 ? allProducts[allProducts.length - 1].id + 1 : 1;
+    const newId =
+      allProducts.length > 0 ? allProducts[allProducts.length - 1].id + 1 : 1;
 
     const product = new Product({
       id: newId,
@@ -132,7 +136,9 @@ const Users = mongoose.model("Users", {
 app.post("/signup", async (req, res) => {
   const check = await Users.findOne({ email: req.body.email });
   if (check) {
-    return res.status(400).json({ success: false, errors: "User already exists" });
+    return res
+      .status(400)
+      .json({ success: false, errors: "User already exists" });
   }
 
   const cart = {};
@@ -168,7 +174,8 @@ app.post("/login", async (req, res) => {
 // ------------------- Auth Middleware -------------------
 const fetchUser = async (req, res, next) => {
   const token = req.header("auth-token");
-  if (!token) return res.status(401).send({ errors: "Authenticate with token" });
+  if (!token)
+    return res.status(401).send({ errors: "Authenticate with token" });
 
   try {
     const data = jwt.verify(token, "secret_ecom");
@@ -183,14 +190,21 @@ const fetchUser = async (req, res, next) => {
 app.post("/addtocart", fetchUser, async (req, res) => {
   const userData = await Users.findOne({ _id: req.user.id });
   userData.cartData[req.body.itemId] += 1;
-  await Users.findOneAndUpdate({ _id: req.user.id }, { cartData: userData.cartData });
+  await Users.findOneAndUpdate(
+    { _id: req.user.id },
+    { cartData: userData.cartData }
+  );
   res.send("Added");
 });
 
 app.post("/removefromcart", fetchUser, async (req, res) => {
   const userData = await Users.findOne({ _id: req.user.id });
-  if (userData.cartData[req.body.itemId] > 0) userData.cartData[req.body.itemId] -= 1;
-  await Users.findOneAndUpdate({ _id: req.user.id }, { cartData: userData.cartData });
+  if (userData.cartData[req.body.itemId] > 0)
+    userData.cartData[req.body.itemId] -= 1;
+  await Users.findOneAndUpdate(
+    { _id: req.user.id },
+    { cartData: userData.cartData }
+  );
   res.send("Removed");
 });
 
