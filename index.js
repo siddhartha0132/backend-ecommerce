@@ -163,8 +163,8 @@ app.get("/newcollection", async (req, res) => {
 
 // Get Popular in Women
 app.get("/popularinwomen", async (req, res) => {
-  let products = await Product.find({ category: "women" }); // Use lowercase for consistency
-  let popular_in_women = products.slice(0, 4);
+  let products = await Product.find({ category: "Women" }); // Use lowercase for consistency
+  let popular_in_women = products.slice(13, 18);
   console.log("Popular in women fetched");
   res.send(popular_in_women);
 });
